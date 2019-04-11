@@ -1,5 +1,20 @@
 ﻿function promiseAll(promises) {
-	
+	return (async function f(){
+		try{
+			var values = [];
+			for(let i=0; i<promises.length; i++){
+				let result = await promises[i];
+				if (result instanceof Error){
+					throw result;
+				} else {
+					values.push(result);
+				}
+			}
+			return Promise.resolve(values);
+		}catch(e){
+			return Promise.reject(e);
+		}
+	})();
 }
 
 function promiseRace(promises) {
