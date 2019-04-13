@@ -1,25 +1,21 @@
 ﻿function promiseAll(promises) {
 	return (async function f(){
-		try{
-			var values = [];
-			for(let i=0; i<promises.length; i++){
-				let result = await promises[i];
-				if (result instanceof Error){
-					throw result;
-				} else {
-					values.push(result);
-				}
+		var values = [];
+		for(let i = 0; i < promises.length; i++) {
+			let result = await promises[i];
+			if (result instanceof Error) {
+				Promise.reject(result);
+			} else {
+				values.push(result);
 			}
-			return Promise.resolve(values);
-		}catch(e){
-			return Promise.reject(e);
 		}
+		return values;
 	})();
 }
 
 function promiseRace(promises) {
 	return new Promise((resolve, reject) => {
-		for(let i=0; i<promises.length; i++){
+		for(let i = 0; i < promises.length; i++) {
 			Promise.resolve(promises[i])
 				.then(result => resolve(result))
 				.catch(result => reject(result));
